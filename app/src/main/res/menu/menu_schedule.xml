@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/mnu_item_include_period_zero"
+        android:title="Include Period Zero" />
+    <item
+        android:id="@+id/mnu_item_announcements"
+        android:title="PA Announcements" />
+    <item
+        android:id="@+id/mnu_item_save"
+        android:title="Save Schedule" />
+    <item
+        android:id="@+id/mnu_item_load"
+        android:title="Load Schedule" />
+    <item
+        android:id="@+id/mnu_item_delete"
+        android:title="Delete Schedules" />
+    <item
+        android:id="@+id/mnu_item_start_timer"
+        android:title="Start Timer" />
+</menu>
