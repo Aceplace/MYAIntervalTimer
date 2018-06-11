@@ -109,7 +109,7 @@ public class TimerActivity extends AppCompatActivity {
     private void startNewCountdownTimer(int time){
         if (periodTimer != null)
             periodTimer.cancel();
-        periodTimer = new CountDownTimer(((time) * 1000) + 100, 1000) {
+            periodTimer = new CountDownTimer(((time) * 1000) + 100, 1000) {
             @Override
             public void onTick(long l) {
                 sbCountdown.setProgress(sbCountdown.getProgress() + 1);
@@ -217,17 +217,18 @@ public class TimerActivity extends AppCompatActivity {
     private void fadeMusicOut(final int currentMusicVolume){
         final Handler hFadeOut = new Handler();
         hFadeOut.postDelayed(new Runnable() {
-            private float timeRemainingInFade = 2000;
+            private float timeRemainingInFade = 1500;
 
             @Override
             public void run() {
                 timeRemainingInFade -= 50;
                 if (timeRemainingInFade > 0) {
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(timeRemainingInFade / 2000f * currentMusicVolume), 0);
+                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(timeRemainingInFade / 1500f * currentMusicVolume), 0);
                     hFadeOut.postDelayed(this, 50);
                 }
                 else{
                     audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                    audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 }
 
             }
@@ -235,6 +236,7 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void fadeMusicIn(final int currentMusicVolume){
+        audioManager.abandonAudioFocus(null);
         final Handler hFadeIn = new Handler();
         hFadeIn.postDelayed(new Runnable() {
             private float timeRemainingInFade = 2000;

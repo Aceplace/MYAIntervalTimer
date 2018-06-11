@@ -53,7 +53,7 @@
         android:layout_marginTop="8dp"
         android:gravity="end|bottom"
         android:text="30:00"
-        android:textSize="150dp"
+        android:textSize="165dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btn_play_timer"
         app:layout_constraintHorizontal_bias="1.0"
