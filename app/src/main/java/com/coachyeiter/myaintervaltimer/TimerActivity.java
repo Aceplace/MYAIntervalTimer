@@ -175,7 +175,8 @@ public class TimerActivity extends AppCompatActivity {
         }.start();
     }
 
-    private void fadeMusicStream(final int timeRemaining){
+    //TODO: Clean up code since were no longer doing fades
+    /*private void fadeMusicStream(final int timeRemaining){
         final int currentMusicVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         for (Integer paAnnounceTime: paAnouncementTimes){
             if (paAnnounceTime == timeRemaining - 2 && timeRemaining - 2 != 5){
@@ -211,7 +212,44 @@ public class TimerActivity extends AppCompatActivity {
                 }.start();
             }
         }
+    }*/
 
+    //This version doesn't actually do the fades. It just take audio focus
+    private void fadeMusicStream(final int timeRemaining){
+        for (Integer paAnnounceTime: paAnouncementTimes){
+            if (paAnnounceTime == timeRemaining - 1 && timeRemaining - 1 != 5){
+
+                audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
+                new CountDownTimer(7000, 7000){//bring the music back after a set interval
+                    @Override
+                    public void onTick(long l) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        audioManager.abandonAudioFocus(null);
+                    }
+                }.start();
+
+            }
+            else if (paAnnounceTime == timeRemaining - 1 && timeRemaining == 6) {
+                audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+
+                new CountDownTimer(14000, 14000){//bring the music back after a set interval
+                    @Override
+                    public void onTick(long l) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        audioManager.abandonAudioFocus(null);
+                    }
+                }.start();
+            }
+        }
     }
 
     private void fadeMusicOut(final int currentMusicVolume){
@@ -223,12 +261,15 @@ public class TimerActivity extends AppCompatActivity {
             public void run() {
                 timeRemainingInFade -= 50;
                 if (timeRemainingInFade > 0) {
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(timeRemainingInFade / 1500f * currentMusicVolume), 0);
+                    //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)(timeRemainingInFade / 1500f * currentMusicVolume);, 0);
                     hFadeOut.postDelayed(this, 50);
                 }
-                else{
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
+                else
+                    {
+                    //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
                     audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+                    //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentMusicVolume, 0);
+                    //audioManager.requestAudioFocus(null, AudioManager.STREAM_NOTIFICATION, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 }
 
             }
@@ -236,6 +277,7 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void fadeMusicIn(final int currentMusicVolume){
+        //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, 0);
         audioManager.abandonAudioFocus(null);
         final Handler hFadeIn = new Handler();
         hFadeIn.postDelayed(new Runnable() {
@@ -245,11 +287,11 @@ public class TimerActivity extends AppCompatActivity {
             public void run() {
                 timeRemainingInFade -= 50;
                 if (timeRemainingInFade > 0) {
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)((2000 - timeRemainingInFade) / 2000f * currentMusicVolume), 0);
+                    //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int)((2000 - timeRemainingInFade) / 2000f * currentMusicVolume), 0);
                     hFadeIn.postDelayed(this, 50);
                 }
                 else{
-                    audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentMusicVolume, 0);
+                    //audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentMusicVolume, 0);
                 }
 
             }
@@ -335,7 +377,7 @@ public class TimerActivity extends AppCompatActivity {
     private void loadSounds(){
         idPeriods = new int[41];
         idRemainingTimes = new int[60];
-        sounds = new SoundPool(1, AudioManager.STREAM_ALARM, 0);
+        sounds = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         for (int i = 0; i < idPeriods.length; i++){
             String periodString = "period" + (i < 10 ? "0" : "") + String.valueOf(i);
             idPeriods[i] = sounds.load(this, getResources().getIdentifier(periodString,"raw",getPackageName()) ,1);
